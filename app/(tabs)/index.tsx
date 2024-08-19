@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import { StatusBar } from 'expo-status-bar';
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 export default function App() {
   const [note, setNote] = useState('');
