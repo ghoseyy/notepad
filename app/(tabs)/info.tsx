@@ -1,5 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { StyleSheet, Image, Platform } from 'react-native';
+import { StyleSheet, Image, View, Text, Platform } from 'react-native';
 import { Collapsible } from '@/components/Collapsible';
 import { ExternalLink } from '@/components/ExternalLink';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
@@ -9,8 +9,16 @@ import { ThemedView } from '@/components/ThemedView';
 export default function TabTwoScreen() {
   return (
     <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={<Ionicons size={310} name="code-slash" style={styles.headerImage} />}
+      headerBackgroundColor={{ light: '#000000', dark: '#000000' }}
+      headerImage={
+        <View style={styles.headerContainer}>
+          <Image
+            source={require('../../assets/images/banner.svg')}
+            style={styles.headerImage}  // Correct usage of the style
+          />
+          <Text style={styles.headerText}>Hello,<br></br>welcome to my test page</Text> {/* Foreground text */}
+        </View>
+      }
     >
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Info</ThemedText>
@@ -18,21 +26,21 @@ export default function TabTwoScreen() {
       <ThemedText>K cha ta halkhabar</ThemedText>
       <Collapsible title="Name">
         <ExternalLink href="https://bimql.link/">
-          <ThemedText type="link">Bimql</ThemedText> <ThemedText type='link'>chhetry</ThemedText>
+          <ThemedText type="link">Bimql</ThemedText> <ThemedText type="link">Chhetry</ThemedText>
         </ExternalLink>
       </Collapsible>
       <Collapsible title="Number">
         <ExternalLink href="mailto:bimal.chhetry122@gmail.com">
           <ThemedText> Find me here </ThemedText>
-          <ThemedText type='link'>Mail</ThemedText>
+          <ThemedText type="link">Mail</ThemedText>
         </ExternalLink>
       </Collapsible>
       <Collapsible title="Address">
-        <ThemedText> Find My Ip</ThemedText>
+        <ThemedText> Find My IP</ThemedText>
       </Collapsible>
       <Collapsible title="Links">
         <ExternalLink href="https://bimql.link/">
-          <ThemedText type="link">Bimql</ThemedText> <ThemedText type='link'>chhetry</ThemedText>
+          <ThemedText type="link">Bimql</ThemedText> <ThemedText type="link">Chhetry</ThemedText>
         </ExternalLink>
       </Collapsible>
       <Collapsible title="Usages">
@@ -60,11 +68,22 @@ export default function TabTwoScreen() {
 }
 
 const styles = StyleSheet.create({
+  headerContainer: {
+    position: 'relative',
+    width: '100%', // Make sure the container takes full width
+  },
   headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
+    width: 1440,  // Set to your desired size
+    height: 250,  // Set to your desired size
+  },
+  headerText: {
     position: 'absolute',
+    top: 20,      // Adjust as needed
+    left: 50,     // Adjust as needed
+    color: 'white', // Text color
+    fontFamily: 'poppins',
+    fontSize: 24, // Adjust text size
+    fontWeight: 'medium', // Adjust font weight
   },
   titleContainer: {
     flexDirection: 'row',
