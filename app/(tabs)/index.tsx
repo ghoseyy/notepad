@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, TextInput, View, Button, Platform, Alert } from 'react-native';
+import { StyleSheet, TextInput, View, Button, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import { StatusBar } from 'expo-status-bar';
-import { SpeedInsights } from "@vercel/speed-insights/next"
 
 export default function App() {
   const [note, setNote] = useState('');
@@ -16,9 +15,10 @@ export default function App() {
   const saveNote = async () => {
     try {
       await AsyncStorage.setItem('note', note);
-      alert('Note saved locally!');
+      Alert.alert('Note saved locally!');
     } catch (error) {
-      alert('Failed to save the note.');
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      Alert.alert('Failed to save the note.', errorMessage);
     }
   };
 
@@ -29,7 +29,8 @@ export default function App() {
         setNote(savedNote);
       }
     } catch (error) {
-      alert('Failed to load the note.');
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      Alert.alert('Failed to load the note.', errorMessage);
     }
   };
 
@@ -40,37 +41,43 @@ export default function App() {
 
   const downloadNote = async () => {
     try {
+      // Define the file URI with a .txt extension
       const fileUri = FileSystem.documentDirectory + 'note.txt';
-      await FileSystem.writeAsStringAsync(fileUri, note);
-      
+
+      // Write the note content to the file with proper encoding
+      await FileSystem.writeAsStringAsync(fileUri, note, { encoding: FileSystem.EncodingType.UTF8 });
+
+      // Check if sharing is available on the platform
       if (await Sharing.isAvailableAsync()) {
+        // Share the file with proper mimeType for text
         await Sharing.shareAsync(fileUri, {
           mimeType: 'text/plain',
           dialogTitle: 'Save note as...',
         });
       } else {
-        alert('Sharing is not available on this platform.');
+        Alert.alert('Sharing is not available on this platform.');
       }
     } catch (error) {
-      alert('Failed to download the note.');
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      Alert.alert('Failed to download the note.', errorMessage);
     }
   };
 
   return (
     <View style={styles.container}>
+      <StatusBar style="auto" />
       <View style={styles.toolbar}>
-        <Button title="Save" onPress={saveNote} />
-        <Button title="Clear" onPress={clearNote} />
-        <Button title="Download" onPress={downloadNote} />
+        <Button title="Save Note" onPress={saveNote} />
+        <Button title="Clear Note" onPress={clearNote} />
+        <Button title="Download Note" onPress={downloadNote} />
       </View>
       <TextInput
         style={styles.textArea}
-        placeholder="Start typing your note here..."
+        placeholder="Write your note here..."
         value={note}
-        onChangeText={(text) => setNote(text)}
+        onChangeText={text => setNote(text)}
         multiline={true}
       />
-      <StatusBar style={Platform.OS === 'web' ? 'auto' : 'light'} />
     </View>
   );
 }
